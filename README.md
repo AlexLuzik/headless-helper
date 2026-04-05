@@ -146,6 +146,12 @@ This project was fully vibe-coded — designed, architected, and written entirel
 - Developed by [Oleksandr Luzin](https://luzin.cc)
 - Inspired by [headless-airplay-screen-mirror](https://github.com/TylerBoni/headless-airplay-screen-mirror) by Tyler Boni
 
+## Support
+
+If you find this project useful, consider buying me a coffee:
+
+<a href="https://www.buymeacoffee.com/AlexLuzik" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 ## License
 
 [MIT License](LICENSE) — Copyright (c) 2026 Oleksandr Luzin
