@@ -1,0 +1,47 @@
+/* Menu Bar */
+"menu.scanning" = "Пошук пристроїв…";
+"menu.settings" = "Налаштування…";
+"menu.quit" = "Завершити Headless Helper";
+"menu.about" = "Про Headless Helper";
+"menu.status.idle" = "Не підключено";
+"menu.status.connecting %@" = "Підключення до %@…";
+"menu.status.connected" = "Підключено";
+"menu.status.error %@" = "Помилка: %@";
+"menu.status.pin" = "Очікування PIN-коду…";
+
+/* Voice Feedback */
+"voice.no_devices" = "Пристрої AirPlay не знайдено.";
+"voice.connecting %@" = "Підключаю до %@.";
+"voice.connected" = "Підключено.";
+"voice.already_connected %@" = "Вже підключено до %@.";
+"voice.connection_error" = "Помилка підключення.";
+"voice.enter_pin" = "Введіть чотиризначний пін-код.";
+"voice.pin_error" = "Помилка введення пін-коду.";
+"voice.cancelled" = "Скасовано.";
+"voice.timeout" = "Час вибору вичерпано.";
+"voice.auto_connect_failed" = "Не вдалося автоматично підключитися до останнього пристрою.";
+
+/* WiFi */
+"wifi.scanning" = "Сканування WiFi мереж…";
+"wifi.no_networks" = "WiFi мережі не знайдено.";
+"wifi.scan" = "Сканувати WiFi";
+"wifi.refresh" = "Оновити";
+"wifi.connecting %@" = "Підключення до %@.";
+"wifi.connected %@" = "Підключено до %@.";
+"wifi.already_connected %@" = "Вже підключено до %@.";
+"wifi.enter_password" = "Введіть пароль WiFi.";
+
+/* Device */
+"device.unknown %@" = "Невідомий (%@)";
+
+/* Settings */
+"settings.tab.general" = "Загальні";
+"settings.tab.hotkey" = "Гаряча клавіша";
+"settings.launch_at_login" = "Запускати при вході";
+"settings.auto_connect" = "Автопідключення до останнього пристрою";
+"settings.language" = "Мова";
+"settings.last_device" = "Останній пристрій:";
+"settings.no_last_device" = "Немає збереженого пристрою";
+"settings.global_hotkey" = "Гаряча клавіша:";
+"settings.hotkey_hint" = "Натисніть на поле, потім натисніть потрібну комбінацію клавіш.";
+"settings.hotkey_recording" = "Натисніть клавіші…";

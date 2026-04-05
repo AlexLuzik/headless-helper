@@ -1,0 +1,6 @@
+.build/
+.swiftpm/
+HeadlessHelper.app/
+*.app/
+.DS_Store
+xcuserdata/

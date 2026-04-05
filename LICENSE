@@ -1,6 +1,9 @@
 MIT License
 
-Copyright (c) 2026 AlexLuzik
+Copyright (c) 2026 Oleksandr Luzin
+
+This project was inspired by headless-airplay-screen-mirror
+by Tyler Boni (https://github.com/TylerBoni/headless-airplay-screen-mirror).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

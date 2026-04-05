@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>HeadlessHelper</string>
+    <key>CFBundleDisplayName</key>
+    <string>Headless Helper</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.headlesshelper.app</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>HeadlessHelper</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>Headless Helper needs Accessibility access to control Screen Mirroring in Control Center.</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Headless Helper needs local network access to discover AirPlay devices.</string>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_airplay._tcp</string>
+    </array>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>uk</string>
+    </array>
+</dict>
+</plist>

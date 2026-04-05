@@ -1,0 +1,47 @@
+/* Menu Bar */
+"menu.scanning" = "Scanning for devices…";
+"menu.settings" = "Settings…";
+"menu.quit" = "Quit Headless Helper";
+"menu.about" = "About Headless Helper";
+"menu.status.idle" = "Not connected";
+"menu.status.connecting %@" = "Connecting to %@…";
+"menu.status.connected" = "Connected";
+"menu.status.error %@" = "Error: %@";
+"menu.status.pin" = "Waiting for PIN…";
+
+/* Voice Feedback */
+"voice.no_devices" = "No AirPlay devices found.";
+"voice.connecting %@" = "Connecting to %@.";
+"voice.connected" = "Connected.";
+"voice.already_connected %@" = "Already connected to %@.";
+"voice.connection_error" = "Connection failed.";
+"voice.enter_pin" = "Enter the four digit pin code.";
+"voice.pin_error" = "Pin entry failed.";
+"voice.cancelled" = "Cancelled.";
+"voice.timeout" = "Selection timed out.";
+"voice.auto_connect_failed" = "Could not auto connect to last device.";
+
+/* WiFi */
+"wifi.scanning" = "Scanning WiFi networks…";
+"wifi.no_networks" = "No WiFi networks found.";
+"wifi.scan" = "Scan WiFi Networks";
+"wifi.refresh" = "Refresh";
+"wifi.connecting %@" = "Connecting to %@.";
+"wifi.connected %@" = "Connected to %@.";
+"wifi.already_connected %@" = "Already connected to %@.";
+"wifi.enter_password" = "Enter WiFi password.";
+
+/* Device */
+"device.unknown %@" = "Unknown (%@)";
+
+/* Settings */
+"settings.tab.general" = "General";
+"settings.tab.hotkey" = "Hotkey";
+"settings.launch_at_login" = "Launch at login";
+"settings.auto_connect" = "Auto-connect to last device on launch";
+"settings.language" = "Language";
+"settings.last_device" = "Last device:";
+"settings.no_last_device" = "No last device saved";
+"settings.global_hotkey" = "Global hotkey:";
+"settings.hotkey_hint" = "Click the field, then press your desired key combination.";
+"settings.hotkey_recording" = "Press keys…";
