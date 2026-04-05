@@ -137,6 +137,10 @@ Access via menu bar → Settings:
 - English
 - Ukrainian (Українська)
 
+## Built with AI
+
+This project was fully vibe-coded — designed, architected, and written entirely through human-AI collaboration. Every line of code was generated via natural language conversation, proving that complex macOS system-level apps can be built without writing code by hand.
+
 ## Credits
 
 - Developed by [Oleksandr Luzin](https://luzin.cc)
