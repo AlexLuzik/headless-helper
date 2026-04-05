@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Headless Helper — Voice-guided remote control for headless Mac</title>
+  <meta name="description" content="macOS menu bar utility for headless Macs. AirPlay mirroring and WiFi management with voice feedback and global hotkeys.">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .font-mono-brand { font-family: 'JetBrains Mono', monospace; }
+    .font-body { font-family: 'DM Sans', sans-serif; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes pulse-ring { 0%{transform:scale(1);opacity:.4} 100%{transform:scale(1.6);opacity:0} }
+    @keyframes fade-up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .anim-float { animation: float 4s ease-in-out infinite; }
+    .anim-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+    .anim-fade-up { animation: fade-up .7s ease-out both; }
+    .anim-delay-1 { animation-delay: .15s; }
+    .anim-delay-2 { animation-delay: .3s; }
+    .anim-delay-3 { animation-delay: .45s; }
+    .anim-delay-4 { animation-delay: .6s; }
+    .anim-delay-5 { animation-delay: .75s; }
+    .cursor-blink::after { content: ''; display: inline-block; width: 2px; height: 1em; background: #6366f1; margin-left: 2px; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+    .glass { background: rgba(17,24,39,.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.06); }
+    .cmd-line { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; background: rgba(0,0,0,.4); margin-bottom: 4px; transition: border-color .3s; }
+    .cmd-line code { flex: 1; font-size: .65rem; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+    .cmd-line code::-webkit-scrollbar { display: none; }
+    .cmd-line .copy-btn { flex-shrink: 0; background: none; border: none; cursor: pointer; padding: 2px; opacity: .4; transition: opacity .15s; }
+    .cmd-line .copy-btn:hover { opacity: .8; }
+  </style>
+ </head>
+ <body class="h-full font-body" style="background:#0a0e1a;scroll-behavior:smooth">
+
+  <!-- Nav -->
+  <nav class="w-full flex items-center justify-between px-6 py-4 md:px-12" style="background:rgba(10,14,26,.85);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,.06)">
+   <div class="flex items-center gap-2">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#6366f1">
+     <i data-lucide="monitor-off" style="width:16px;height:16px;color:#fff"></i>
+    </div>
+    <span class="font-mono-brand font-bold text-white text-sm tracking-tight">Headless Helper</span>
+   </div>
+   <div class="hidden md:flex items-center gap-6 text-sm" style="color:#94a3b8">
+    <a href="#features" class="hover:text-white transition-colors">Features</a>
+    <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
+    <a href="#hotkeys" class="hover:text-white transition-colors">Hotkeys</a>
+    <a href="#install" class="hover:text-white transition-colors">Install</a>
+   </div>
+   <a href="https://github.com/AlexLuzik/headless-helper/releases" class="text-xs font-semibold px-4 py-2 rounded-lg transition-all hover:scale-105 no-underline" style="background:#6366f1;color:#fff">
+    Download
+   </a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="w-full px-6 md:px-12 pt-20 pb-24 flex flex-col items-center text-center relative overflow-hidden">
+   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-15" style="background:radial-gradient(circle,#6366f1 0%,transparent 70%)"></div>
+
+   <div class="anim-float relative mb-8 anim-fade-up">
+    <div class="absolute inset-0 rounded-2xl anim-pulse-ring" style="background:#6366f1"></div>
+    <div class="relative w-20 h-20 rounded-2xl flex items-center justify-center" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">
+     <i data-lucide="monitor-off" style="width:36px;height:36px;color:#fff"></i>
+    </div>
+   </div>
+
+   <div class="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full text-xs font-medium anim-fade-up anim-delay-1" style="background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.25)">
+    macOS 14+ Menu Bar Utility
+   </div>
+
+   <h1 class="font-mono-brand font-bold text-4xl md:text-6xl leading-tight mb-4 anim-fade-up anim-delay-2" style="color:#f1f5f9">
+    Headless Helper
+   </h1>
+   <p class="text-lg md:text-xl max-w-2xl mb-4 anim-fade-up anim-delay-3" style="color:#94a3b8">
+    Voice-guided remote control for your headless Mac.<br>
+    AirPlay mirroring & WiFi management without a display.
+   </p>
+   <p class="text-sm max-w-lg mb-10 anim-fade-up anim-delay-4" style="color:#64748b">
+    Open source. Built with Swift. Fully vibe-coded.
+   </p>
+
+   <div class="flex flex-col sm:flex-row items-center gap-4 anim-fade-up anim-delay-5">
+    <a href="https://github.com/AlexLuzik/headless-helper/releases" class="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all hover:scale-105 hover:shadow-lg no-underline" style="background:#6366f1;box-shadow:0 0 24px rgba(99,102,241,.3)">
+     <i data-lucide="download" style="width:18px;height:18px"></i>
+     Download for macOS
+    </a>
+    <a href="https://github.com/AlexLuzik/headless-helper" class="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 no-underline" style="background:rgba(255,255,255,.06);color:#94a3b8;border:1px solid rgba(255,255,255,.1)">
+     <i data-lucide="github" style="width:18px;height:18px"></i>
+     View Source
+    </a>
+   </div>
+  </section>
+
+  <!-- Terminal preview -->
+  <section class="w-full px-6 md:px-12 pb-20 flex justify-center">
+   <div class="w-full max-w-2xl rounded-xl overflow-hidden anim-fade-up" style="background:#111827;border:1px solid rgba(255,255,255,.08)">
+    <div class="flex items-center gap-2 px-4 py-3" style="background:#1a1f2e">
+     <div class="w-3 h-3 rounded-full" style="background:#ef4444"></div>
+     <div class="w-3 h-3 rounded-full" style="background:#f59e0b"></div>
+     <div class="w-3 h-3 rounded-full" style="background:#22c55e"></div>
+     <span class="ml-2 font-mono-brand text-xs" style="color:#64748b">Headless Helper v1.0</span>
+    </div>
+    <div class="px-5 py-4 font-mono-brand text-sm leading-relaxed" style="color:#94a3b8">
+     <p><span style="color:#6366f1">▸</span> Scanning for AirPlay devices...</p>
+     <p style="color:#22c55e">&#10003; Found: Living Room Apple TV</p>
+     <p style="color:#22c55e">&#10003; Found: Bedroom Apple TV</p>
+     <p><span style="color:#6366f1">▸</span> <span style="color:#f1f5f9">"Two devices found. Press 1 for Living Room, 2 for Bedroom."</span></p>
+     <p class="mt-2"><span style="color:#f59e0b">&#8963;&#8997;M</span> pressed <span style="color:#64748b">&rarr;</span> Connecting to Living Room Apple TV...</p>
+     <p style="color:#22c55e">&#10003; Screen mirroring active &mdash; Entire Screen mode</p>
+     <p><span style="color:#6366f1">▸</span> <span style="color:#f1f5f9">"Connected to Living Room Apple TV."</span></p>
+     <p class="mt-2" style="color:#64748b"><span class="cursor-blink">_</span></p>
+    </div>
+   </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="w-full px-6 md:px-12 pb-24">
+   <div class="text-center mb-12">
+    <h2 class="font-mono-brand font-bold text-2xl md:text-3xl mb-3" style="color:#f1f5f9">Features</h2>
+    <p class="text-sm" style="color:#94a3b8">Everything you need to control a headless Mac</p>
+   </div>
+   <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
+    <div class="rounded-xl p-6 transition-all hover:-translate-y-1 glass">
+     <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-4" style="background:rgba(99,102,241,.15)">
+      <i data-lucide="airplay" style="width:20px;height:20px;color:#a5b4fc"></i>
+     </div>
+     <h3 class="font-mono-brand font-bold text-lg mb-2" style="color:#f1f5f9">AirPlay Mirroring</h3>
+     <p class="text-sm leading-relaxed" style="color:#94a3b8">Discovers Apple TV via Bonjour, filters display-capable devices, handles PIN entry, and starts full-screen mirroring through Control Center automation.</p>
+    </div>
+    <div class="rounded-xl p-6 transition-all hover:-translate-y-1 glass">
+     <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-4" style="background:rgba(34,197,94,.12)">
+      <i data-lucide="wifi" style="width:20px;height:20px;color:#86efac"></i>
+     </div>
+     <h3 class="font-mono-brand font-bold text-lg mb-2" style="color:#f1f5f9">WiFi Management</h3>
+     <p class="text-sm leading-relaxed" style="color:#94a3b8">Scans networks with signal strength & security status, connects automatically, monitors for wrong password errors, and verifies connection.</p>
+    </div>
+    <div class="rounded-xl p-6 transition-all hover:-translate-y-1 glass">
+     <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-4" style="background:rgba(251,191,36,.12)">
+      <i data-lucide="volume-2" style="width:20px;height:20px;color:#fcd34d"></i>
+     </div>
+     <h3 class="font-mono-brand font-bold text-lg mb-2" style="color:#f1f5f9">Voice-First Design</h3>
+     <p class="text-sm leading-relaxed" style="color:#94a3b8">Every action is announced &mdash; device lists, connection status, errors. Works entirely without seeing the screen. English & Ukrainian voice support.</p>
+    </div>
+   </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how-it-works" class="w-full px-6 md:px-12 pb-24">
+   <div class="max-w-3xl mx-auto text-center">
+    <h2 class="font-mono-brand font-bold text-2xl md:text-3xl mb-3" style="color:#f1f5f9">How It Works</h2>
+    <p class="text-sm mb-12" style="color:#94a3b8">Control Center automation via macOS Accessibility API</p>
+    <div class="grid gap-4 text-left">
+     <div class="flex items-start gap-4 rounded-xl p-5 glass">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(99,102,241,.15)">
+       <span class="font-mono-brand text-sm font-bold" style="color:#a5b4fc">1</span>
+      </div>
+      <div>
+       <div class="text-sm font-semibold mb-1" style="color:#f1f5f9">Press a hotkey</div>
+       <div class="text-xs" style="color:#94a3b8">Global hotkeys work from any app, even without a display connected. <span class="font-mono-brand" style="color:#f59e0b">&#8963;&#8997;M</span> for AirPlay, <span class="font-mono-brand" style="color:#f59e0b">&#8963;&#8997;W</span> for WiFi.</div>
+      </div>
+     </div>
+     <div class="flex items-start gap-4 rounded-xl p-5 glass">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(99,102,241,.15)">
+       <span class="font-mono-brand text-sm font-bold" style="color:#a5b4fc">2</span>
+      </div>
+      <div>
+       <div class="text-sm font-semibold mb-1" style="color:#f1f5f9">Listen to voice feedback</div>
+       <div class="text-xs" style="color:#94a3b8">The app opens Control Center, scans for devices or networks, and reads you a numbered list aloud.</div>
+      </div>
+     </div>
+     <div class="flex items-start gap-4 rounded-xl p-5 glass">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(99,102,241,.15)">
+       <span class="font-mono-brand text-sm font-bold" style="color:#a5b4fc">3</span>
+      </div>
+      <div>
+       <div class="text-sm font-semibold mb-1" style="color:#f1f5f9">Pick a number to connect</div>
+       <div class="text-xs" style="color:#94a3b8">Press a digit key to select. The app handles everything &mdash; PIN codes, screen picker, WiFi passwords &mdash; and confirms with voice.</div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- Hotkeys -->
+  <section id="hotkeys" class="w-full px-6 md:px-12 pb-24">
+   <div class="max-w-2xl mx-auto text-center">
+    <h2 class="font-mono-brand font-bold text-2xl md:text-3xl mb-3" style="color:#f1f5f9">Global Hotkeys</h2>
+    <p class="text-sm mb-10" style="color:#94a3b8">Control everything from the keyboard &mdash; no display needed</p>
+    <div class="grid sm:grid-cols-2 gap-4">
+     <div class="rounded-xl p-5 flex items-center gap-4 glass">
+      <div class="font-mono-brand text-sm font-bold px-3 py-2 rounded-lg" style="background:rgba(99,102,241,.15);color:#a5b4fc">&#8963;&#8997;M</div>
+      <div class="text-left">
+       <div class="text-sm font-semibold" style="color:#f1f5f9">AirPlay Mirror</div>
+       <div class="text-xs" style="color:#64748b">Scan & connect to Apple TV</div>
+      </div>
+     </div>
+     <div class="rounded-xl p-5 flex items-center gap-4 glass">
+      <div class="font-mono-brand text-sm font-bold px-3 py-2 rounded-lg" style="background:rgba(34,197,94,.12);color:#86efac">&#8963;&#8997;W</div>
+      <div class="text-left">
+       <div class="text-sm font-semibold" style="color:#f1f5f9">WiFi Connect</div>
+       <div class="text-xs" style="color:#64748b">Scan & join WiFi networks</div>
+      </div>
+     </div>
+     <div class="rounded-xl p-5 flex items-center gap-4 glass">
+      <div class="font-mono-brand text-sm font-bold px-3 py-2 rounded-lg" style="background:rgba(251,191,36,.12);color:#fcd34d">1-99</div>
+      <div class="text-left">
+       <div class="text-sm font-semibold" style="color:#f1f5f9">Quick Select</div>
+       <div class="text-xs" style="color:#64748b">Choose a device or network by number</div>
+      </div>
+     </div>
+     <div class="rounded-xl p-5 flex items-center gap-4 glass">
+      <div class="font-mono-brand text-sm font-bold px-3 py-2 rounded-lg" style="background:rgba(239,68,68,.12);color:#fca5a5">Esc</div>
+      <div class="text-left">
+       <div class="text-sm font-semibold" style="color:#f1f5f9">Cancel</div>
+       <div class="text-xs" style="color:#64748b">Cancel current selection</div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- Who it's for -->
+  <section id="users" class="w-full px-6 md:px-12 pb-24">
+   <div class="max-w-3xl mx-auto text-center">
+    <h2 class="font-mono-brand font-bold text-2xl md:text-3xl mb-10" style="color:#f1f5f9">Built For</h2>
+    <div class="grid sm:grid-cols-2 gap-4 text-left">
+     <div class="flex items-start gap-3 rounded-xl p-5 glass">
+      <i data-lucide="monitor-off" style="width:18px;height:18px;color:#a5b4fc;flex-shrink:0;margin-top:2px"></i>
+      <div>
+       <div class="text-sm font-semibold" style="color:#f1f5f9">Headless Mac Setups</div>
+       <div class="text-xs" style="color:#64748b">MacBook running without a display &mdash; connect to AirPlay or WiFi blindly</div>
+      </div>
+     </div>
+     <div class="flex items-start gap-3 rounded-xl p-5 glass">
+      <i data-lucide="repeat" style="width:18px;height:18px;color:#86efac;flex-shrink:0;margin-top:2px"></i>
+      <div>
+       <div class="text-sm font-semibold" style="color:#f1f5f9">Network or Display Changes</div>
+       <div class="text-xs" style="color:#64748b">Moved your Mac, changed router, or switched Apple TV? Reconnect everything without plugging in a monitor again</div>
+      </div>
+     </div>
+     <div class="flex items-start gap-3 rounded-xl p-5 glass">
+      <i data-lucide="wifi" style="width:18px;height:18px;color:#fcd34d;flex-shrink:0;margin-top:2px"></i>
+      <div>
+       <div class="text-sm font-semibold" style="color:#f1f5f9">Remote WiFi Setup</div>
+       <div class="text-xs" style="color:#64748b">Scan, select, and connect to WiFi networks on a Mac you can't see &mdash; voice tells you what's available</div>
+      </div>
+     </div>
+     <div class="flex items-start gap-3 rounded-xl p-5 glass">
+      <i data-lucide="accessibility" style="width:18px;height:18px;color:#f87171;flex-shrink:0;margin-top:2px"></i>
+      <div>
+       <div class="text-sm font-semibold" style="color:#f1f5f9">Accessibility Needs</div>
+       <div class="text-xs" style="color:#64748b">Voice-guided interface for users who prefer or require audio feedback over visual UI</div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- Install -->
+  <section id="install" class="w-full px-6 md:px-12 pb-24">
+   <div class="max-w-2xl mx-auto text-center">
+    <h2 class="font-mono-brand font-bold text-2xl md:text-3xl mb-3" style="color:#f1f5f9">Get Started</h2>
+    <p class="text-sm mb-10" style="color:#94a3b8">Download the app or build from source</p>
+    <div class="grid sm:grid-cols-2 gap-4">
+     <a href="https://github.com/AlexLuzik/headless-helper/releases" class="rounded-xl p-6 text-center transition-all hover:-translate-y-1 no-underline glass block">
+      <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-4 mx-auto" style="background:rgba(99,102,241,.15)">
+       <i data-lucide="download" style="width:20px;height:20px;color:#a5b4fc"></i>
+      </div>
+      <div class="text-sm font-semibold mb-1" style="color:#f1f5f9">Download .dmg</div>
+      <div class="text-xs" style="color:#64748b">Latest release from GitHub</div>
+     </a>
+     <div class="rounded-xl p-6 text-center glass">
+      <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-4 mx-auto" style="background:rgba(34,197,94,.12)">
+       <i data-lucide="terminal" style="width:20px;height:20px;color:#86efac"></i>
+      </div>
+      <div class="text-sm font-semibold mb-3" style="color:#f1f5f9">Build from Source</div>
+      <div class="text-xs font-mono-brand text-left" style="color:#94a3b8">
+       <div class="cmd-line">
+        <code>git clone https://github.com/AlexLuzik/headless-helper.git</code>
+        <button class="copy-btn" onclick="copyCmd(this.parentElement)" aria-label="Copy"><i data-lucide="copy" style="width:14px;height:14px;color:#94a3b8"></i></button>
+       </div>
+       <div class="cmd-line">
+        <code>cd headless-helper</code>
+        <button class="copy-btn" onclick="copyCmd(this.parentElement)" aria-label="Copy"><i data-lucide="copy" style="width:14px;height:14px;color:#94a3b8"></i></button>
+       </div>
+       <div class="cmd-line">
+        <code>chmod +x build.sh && ./build.sh</code>
+        <button class="copy-btn" onclick="copyCmd(this.parentElement)" aria-label="Copy"><i data-lucide="copy" style="width:14px;height:14px;color:#94a3b8"></i></button>
+       </div>
+      </div>
+     </div>
+    </div>
+    <p class="text-xs mt-6" style="color:#475569">Requires macOS 14 (Sonoma) or later &middot; Accessibility permission needed</p>
+    <p class="text-xs mt-2" style="color:#475569"><i data-lucide="info" style="width:12px;height:12px;display:inline;vertical-align:-2px"></i> A display is required for the initial setup &mdash; to install the app, grant Accessibility permission, and enable Launch at Login in the app settings. After that, you can go fully headless.</p>
+   </div>
+  </section>
+
+  <!-- Vibe-coded badge -->
+  <section class="w-full px-6 md:px-12 pb-20">
+   <div class="max-w-xl mx-auto text-center rounded-xl p-8 glass">
+    <div class="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full text-xs font-medium" style="background:rgba(168,85,247,.15);color:#c4b5fd;border:1px solid rgba(168,85,247,.25)">
+     <i data-lucide="sparkles" style="width:12px;height:12px"></i> 100% Vibe-Coded
+    </div>
+    <p class="text-sm leading-relaxed" style="color:#94a3b8">
+     This entire project &mdash; every line of Swift, every build script, this very page &mdash; was designed, architected, and written through human-AI collaboration. No code was written by hand.
+    </p>
+   </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="w-full px-6 md:px-12 py-8 text-center" style="border-top:1px solid rgba(255,255,255,.06)">
+   <div class="flex items-center justify-center gap-4 mb-3">
+    <div class="flex items-center gap-2">
+     <div class="w-5 h-5 rounded flex items-center justify-center" style="background:#6366f1">
+      <i data-lucide="monitor-off" style="width:10px;height:10px;color:#fff"></i>
+     </div>
+     <span class="font-mono-brand text-xs font-bold" style="color:#64748b">Headless Helper</span>
+    </div>
+    <span style="color:#334155">|</span>
+    <a href="https://github.com/AlexLuzik/headless-helper" class="text-xs hover:text-white transition-colors no-underline" style="color:#64748b">
+     <i data-lucide="github" style="width:14px;height:14px;display:inline;vertical-align:-2px"></i> GitHub
+    </a>
+   </div>
+   <p class="text-xs" style="color:#475569">MIT License &middot; Made by <a href="https://luzin.cc" style="color:#64748b" class="hover:text-white transition-colors">Oleksandr Luzin</a></p>
+  </footer>
+
+  <script>
+   lucide.createIcons();
+
+   function copyCmd(el) {
+    const text = el.querySelector('code').textContent;
+    const btn = el.querySelector('.copy-btn');
+    navigator.clipboard.writeText(text).then(() => {
+     btn.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;color:#22c55e"></i>';
+     btn.style.opacity = '1';
+     lucide.createIcons();
+     setTimeout(() => {
+      btn.innerHTML = '<i data-lucide="copy" style="width:14px;height:14px;color:#94a3b8"></i>';
+      btn.style.opacity = '';
+      lucide.createIcons();
+     }, 2000);
+    });
+   }
+
+   document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+     const target = document.querySelector(a.getAttribute('href'));
+     if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+     }
+    });
+   });
+  </script>
+ </body>
+</html>
